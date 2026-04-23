@@ -18,17 +18,27 @@ def fetch_and_save(urls, output_file, title):
 
 # Списки источников
 wl_sources = [
-    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/WHITE-CIDR-RU-all.txt",
-    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/Vless-Reality-White-Lists-Rus-Mobile-2.txt"
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/Vless-Reality-White-Lists-Rus-Mobile.txt"
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/WHITE-CIDR-RU-all.txt"
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/WHITE-CIDR-RU-checked.txt"
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/WHITE-SNI-RU-all.txt"
+    "https://raw.githubusercontent.com/dequar/deqwl/main/vless_checked.txt"
+    "https://raw.githubusercontent.com/tankist939-afk/Obhod-WL/refs/heads/main/Obhod%20WL"
     "https://etoneya.a9fm.site/whitelist"
+    "https://obwl.obprojects.lol/sub.txt"
+    "https://obwl.vercel.app/sub.txt"
+    "https://raw.githubusercontent.com/zieng2/wl/main/vless_universal.txt"
+    "https://raw.githubusercontent.com/zieng2/wl/main/vless_lite.txt"
 ]
 
 bl_sources = [
-    "https://obwl.obprojects.lol/sub.txt",
-    "https://obwl.vercel.app/sub.txt",
-    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_SS+All_RUS.txt",
-    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_SS+All_RUS.txt"
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
     "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
+    "https://raw.githubusercontent.com/sevcator/5ubscrpt10n/main/protocols/vl.txt"
+    "https://github.com/Epodonios/v2ray-configs/raw/main/All_Configs_base64_Sub.txt"
+    "https://github.com/AvenCores/goida-vpn-configs/raw/refs/heads/main/githubmirror/26.txt"
 ]
 
 all_sources = wl_sources + bl_sources
