@@ -1,0 +1,35 @@
+name: Update VPN Lists
+
+on:
+  schedule:
+    - cron: '*/30 * * * *' # Запуск каждые 30 минут
+  workflow_dispatch: # Позволяет запустить вручную
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run update script
+        run: python update_lists.py
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@://github.com"
+          git config --local user.name "github-actions[bot]"
+          git add wl.txt bl.txt all.txt
+          git commit -m "Auto-update lists: $(date)" || exit 0
+          git push
+          
