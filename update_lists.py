@@ -1,30 +1,18 @@
 import requests
 
 def fetch_and_save(urls, output_file, title):
-    # Начинаем файл с твоего заголовка
+    # Начинаем с заголовка
     combined_content = f"# profile-title: {title}\n"
-    unique_configs = []
     
     for url in urls:
         try:
-            response = requests.get(url, timeout=15)
+            response = requests.get(url, timeout=20)
             if response.status_code == 200:
-                # Разбиваем полученный текст на строки
-                lines = response.text.splitlines()
-                for line in lines:
-                    line = line.strip()
-                    # Проверяем, что это VPN ссылка и её еще нет в списке
-                    if (line.startswith('vless://') or line.startswith('ss://') or 
-                        line.startswith('vmess://') or line.startswith('trojan://')) :
-                        if line not in unique_configs:
-                            unique_configs.append(line)
+                # Просто добавляем весь текст как есть
+                combined_content += response.text + "\n"
         except Exception as e:
             print(f"Ошибка при загрузке {url}: {e}")
     
-    # Добавляем все уникальные ссылки в итоговую строку
-    combined_content += "\n".join(unique_configs)
-    
-    # Записываем в файл (как в твоем рабочем примере)
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(combined_content.strip())
 
