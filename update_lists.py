@@ -1,61 +1,36 @@
 import requests
 
-def fetch_and_clean(urls, title, prefix):
-    unique_configs = []
-    protocols = ('vless://', 'ss://', 'vmess://', 'trojan://', 'tuic://', 'hysteria2://', 'hy2://')
-    
+def fetch_and_save(urls, output_file):
+    combined_content = ""
     for url in urls:
         try:
-            print(f"Загрузка: {url}")
-            response = requests.get(url, timeout=20)
+            response = requests.get(url, timeout=10)
             if response.status_code == 200:
-                lines = response.text.splitlines()
-                for line in lines:
-                    line = line.strip()
-                    if any(line.startswith(p) for p in protocols):
-                        # Отрезаем старое название после # и берем только чистую ссылку
-                        link_only = line.split('#')[0]
-                        if link_only not in unique_configs:
-                            unique_configs.append(link_only)
-            else:
-                print(f"Ошибка сервера {response.status_code} на {url}")
+                combined_content += response.text + "\n"
         except Exception as e:
-            print(f"Ошибка сети на {url}: {e}")
+            print(f"Ошибка при загрузке {url}: {e}")
     
-    # Формируем текст
-    content = f"# profile-title: {title}\n"
-    for i, link in enumerate(unique_configs, 1):
-        content += f"{link}#{prefix}_{i}\n"
-    return content
+    with open(output_file, "w", encoding="utf-8") as f:
+        f.write(combined_content.strip())
 
-# Источники
+# Списки источников
 wl_sources = [
-    "https://githubusercontent.com",
-    "https://githubusercontent.com",
-    "https://a9fm.site"
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/Vless-Reality-White-Lists-Rus-Mobile-2.txt",
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/refs/heads/main/WHITE-CIDR-RU-all.txt",
+    "https://etoneya.a9fm.site/whitelist"
 ]
 
 bl_sources = [
-    "https://obprojects.lol",
-    "https://vercel.app",
-    "https://githubusercontent.com",
-    "https://githubusercontent.com",
-    "https://githubusercontent.com"
+    "https://obwl.obprojects.lol/sub.txt",
+    "https://obwl.vercel.app/sub.txt",
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt",
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_SS+All_RUS.txt",
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt"
 ]
 
 all_sources = wl_sources + bl_sources
 
-# Запись файлов
-print("Сохранение wl.txt...")
-with open("wl.txt", "w", encoding="utf-8") as f:
-    f.write(fetch_and_clean(wl_sources, "🏳️ БЕЛЫЕ СПИСКИ 🏳️ WHITE LISTS | CIDR | GrimVPN", "WhiteList"))
-
-print("Сохранение bl.txt...")
-with open("bl.txt", "w", encoding="utf-8") as f:
-    f.write(fetch_and_clean(bl_sources, "🏴ЧЕРНЫЕ СПИСКИ 🏴 BLACK LISTS | GrimVPN", "BlackList"))
-
-print("Сохранение all.txt...")
-with open("all.txt", "w", encoding="utf-8") as f:
-    f.write(fetch_and_clean(all_sources, "🏳️ VPN 🏴 | GrimVPN", "GrimVPN"))
-
-print("Все задачи выполнены успешно!")
+# Выполнение
+fetch_and_save(wl_sources, "wl.txt")
+fetch_and_save(bl_sources, "bl.txt")
+fetch_and_save(all_sources, "all.txt")
