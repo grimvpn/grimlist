@@ -2,6 +2,8 @@ import requests
 
 def fetch_and_clean(urls, title, prefix):
     unique_configs = []
+    # Список поддерживаемых протоколов
+    protocols = ('vless://', 'ss://', 'vmess://', 'trojan://', 'tuic://', 'hysteria2://', 'hy2://')
     
     for url in urls:
         try:
@@ -10,22 +12,21 @@ def fetch_and_clean(urls, title, prefix):
                 lines = response.text.splitlines()
                 for line in lines:
                     line = line.strip()
-                    # Пропускаем пустые строки, комментарии и спец. заголовки
-                    if not line or line.startswith('#') or line.startswith('//'):
-                        continue
                     
-                    # Очищаем от старого названия (все после #)
-                    base_config = line.split('#')[0]
-                    
-                    if base_config not in unique_configs:
-                        unique_configs.append(base_config)
+                    # Проверяем, что строка начинается с протокола VPN
+                    if any(line.startswith(p) for p in protocols):
+                        # Отрезаем старое название после знака #
+                        base_config = line.split('#')[0]
+                        
+                        if base_config not in unique_configs:
+                            unique_configs.append(base_config)
         except Exception as e:
             print(f"Ошибка при загрузке {url}: {e}")
     
     # Формируем итоговый текст
     output = f"# profile-title: {title}\n"
     
-    # Добавляем нумерацию к каждому конфигу для красоты в приложении
+    # Собираем строки: Ссылка#ТвоеНазвание_Номер
     for i, config in enumerate(unique_configs, 1):
         output += f"{config}#{prefix}_{i}\n"
         
@@ -48,18 +49,13 @@ bl_sources = [
 
 all_sources = wl_sources + bl_sources
 
-# Параметры (Заголовок, Префикс для серверов)
-wl_data = ("🏳️ БЕЛЫЕ СПИСКИ 🏳️ WHITE LISTS | CIDR | GrimVPN", "WhiteList")
-bl_data = ("🏴ЧЕРНЫЕ СПИСКИ 🏴 BLACK LISTS | GrimVPN", "BlackList")
-all_data = ("🏳️ VPN 🏴 | GrimVPN", "GrimVPN")
-
-# Сохранение
+# Сохранение файлов с твоими названиями
 with open("wl.txt", "w", encoding="utf-8") as f:
-    f.write(fetch_and_clean(wl_sources, wl_data[0], wl_data[1]))
+    f.write(fetch_and_clean(wl_sources, "🏳️ БЕЛЫЕ СПИСКИ 🏳️ WHITE LISTS | CIDR | GrimVPN", "WhiteList"))
 
 with open("bl.txt", "w", encoding="utf-8") as f:
-    f.write(fetch_and_clean(bl_sources, bl_data[0], bl_data[1]))
+    f.write(fetch_and_clean(bl_sources, "🏴ЧЕРНЫЕ СПИСКИ 🏴 BLACK LISTS | GrimVPN", "BlackList"))
 
 with open("all.txt", "w", encoding="utf-8") as f:
-    f.write(fetch_and_clean(all_sources, all_data[0], all_data[1]))
+    f.write(fetch_and_clean(all_sources, "🏳️ VPN 🏴 | GrimVPN", "GrimVPN"))
     
