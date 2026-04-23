@@ -1,33 +1,34 @@
 import requests
 
-def fetch_and_process(urls, output_file, title):
-    # Добавляем заголовок профиля (твое брендирование подписки)
+def fetch_and_save(urls, output_file, title):
+    # Начинаем файл с твоего заголовка
     combined_content = f"# profile-title: {title}\n"
-    unique_configs = [] 
-    protocols = ('vless://', 'ss://', 'vmess://', 'trojan://', 'tuic://', 'hysteria2://', 'hy2://')
+    unique_configs = []
     
     for url in urls:
         try:
-            print(f"Загрузка: {url}")
             response = requests.get(url, timeout=15)
             if response.status_code == 200:
-                for line in response.text.splitlines():
+                # Разбиваем полученный текст на строки
+                lines = response.text.splitlines()
+                for line in lines:
                     line = line.strip()
-                    # Проверяем, что это VPN ссылка
-                    if any(line.startswith(p) for p in protocols):
-                        # Добавляем строку целиком (со всеми оригинальными названиями)
+                    # Проверяем, что это VPN ссылка и её еще нет в списке
+                    if (line.startswith('vless://') or line.startswith('ss://') or 
+                        line.startswith('vmess://') or line.startswith('trojan://')) :
                         if line not in unique_configs:
                             unique_configs.append(line)
         except Exception as e:
-            print(f"Ошибка с {url}: {e}")
+            print(f"Ошибка при загрузке {url}: {e}")
     
-    # Собираем всё в один текст
+    # Добавляем все уникальные ссылки в итоговую строку
     combined_content += "\n".join(unique_configs)
     
+    # Записываем в файл (как в твоем рабочем примере)
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(combined_content.strip())
 
-# Твои источники
+# Списки источников
 wl_sources = [
     "https://githubusercontent.com",
     "https://githubusercontent.com",
@@ -44,7 +45,7 @@ bl_sources = [
 
 all_sources = wl_sources + bl_sources
 
-# Запись файлов с сохранением оригинальных имен серверов
-fetch_and_process(wl_sources, "wl.txt", "🏳️ БЕЛЫЕ СПИСКИ 🏳️ WHITE LISTS | CIDR | GrimVPN")
-fetch_and_process(bl_sources, "bl.txt", "🏴ЧЕРНЫЕ СПИСКИ 🏴 BLACK LISTS | GrimVPN")
-fetch_and_process(all_sources, "all.txt", "🏳️ VPN 🏴 | GrimVPN")
+# Выполнение
+fetch_and_save(wl_sources, "wl.txt", "🏳️ БЕЛЫЕ СПИСКИ 🏳️ WHITE LISTS | CIDR | GrimVPN")
+fetch_and_save(bl_sources, "bl.txt", "🏴ЧЕРНЫЕ СПИСКИ 🏴 BLACK LISTS | GrimVPN")
+fetch_and_save(all_sources, "all.txt", "🏳️ VPN 🏴 | GrimVPN")
