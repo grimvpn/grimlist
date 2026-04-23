@@ -2,41 +2,38 @@ import requests
 
 def fetch_and_clean(urls, title, prefix):
     unique_configs = []
-    # Протоколы, которые мы ищем
+    # Список протоколов, которые мы ищем в строках
     protocols = ('vless://', 'ss://', 'vmess://', 'trojan://', 'tuic://', 'hysteria2://', 'hy2://')
     
     for url in urls:
         try:
-            print(f"Загрузка: {url}")
-            response = requests.get(url, timeout=15)
+            response = requests.get(url, timeout=20)
             if response.status_code == 200:
                 lines = response.text.splitlines()
                 for line in lines:
                     line = line.strip()
-                    
-                    # Проверяем, начинается ли строка с нужного протокола
+                    # Проверяем, что строка начинается с одного из VPN протоколов
                     if any(line.startswith(p) for p in protocols):
-                        # Очищаем от старого названия (берем всё до символа #)
-                        clean_link = line.split('#')[0]
+                        # Отрезаем старое название (все, что после первого символа #)
+                        link_part = line.split('#')[0]
                         
-                        if clean_link not in unique_configs:
-                            unique_configs.append(clean_link)
-            else:
-                print(f"Ошибка {response.status_code} для {url}")
+                        # Добавляем в список уникальных, если такой ссылки еще нет
+                        if link_part not in unique_configs:
+                            unique_configs.append(link_part)
         except Exception as e:
             print(f"Ошибка при загрузке {url}: {e}")
     
     # Формируем итоговый текст
-    # Сначала заголовок подписки
-    output = f"# profile-title: {title}\n"
+    # 1. Заголовок для приложения
+    content = f"# profile-title: {title}\n"
     
-    # Добавляем ссылки с твоим названием и нумерацией
+    # 2. Список ссылок с твоим названием и нумерацией
     for i, link in enumerate(unique_configs, 1):
-        output += f"{link}#{prefix}_{i}\n"
+        content += f"{link}#{prefix}_{i}\n"
         
-    return output
+    return content
 
-# Источники
+# Источники данных
 wl_sources = [
     "https://githubusercontent.com",
     "https://githubusercontent.com",
@@ -53,17 +50,13 @@ bl_sources = [
 
 all_sources = wl_sources + bl_sources
 
-# Сохраняем результаты в файлы
-print("Обработка White List...")
+# Запись в файлы
 with open("wl.txt", "w", encoding="utf-8") as f:
     f.write(fetch_and_clean(wl_sources, "🏳️ БЕЛЫЕ СПИСКИ 🏳️ WHITE LISTS | CIDR | GrimVPN", "WhiteList"))
 
-print("Обработка Black List...")
 with open("bl.txt", "w", encoding="utf-8") as f:
     f.write(fetch_and_clean(bl_sources, "🏴ЧЕРНЫЕ СПИСКИ 🏴 BLACK LISTS | GrimVPN", "BlackList"))
 
-print("Обработка All List...")
 with open("all.txt", "w", encoding="utf-8") as f:
     f.write(fetch_and_clean(all_sources, "🏳️ VPN 🏴 | GrimVPN", "GrimVPN"))
-
-print("Готово!")
+    
