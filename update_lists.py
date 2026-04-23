@@ -18,17 +18,17 @@ def fetch_and_save(urls, output_file, title):
 
 # Списки источников
 wl_sources = [
-    "https://githubusercontent.com",
-    "https://githubusercontent.com",
-    "https://a9fm.site"
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/WHITE-CIDR-RU-all.txt",
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/Vless-Reality-White-Lists-Rus-Mobile.txt",
+    "https://etoneya.a9fm.site/whitelist"
 ]
 
 bl_sources = [
-    "https://obprojects.lol",
-    "https://vercel.app",
-    "https://githubusercontent.com",
-    "https://githubusercontent.com",
-    "https://githubusercontent.com"
+    "https://obwl.obprojects.lol/sub.txt",
+    "https://obwl.vercel.app/sub.txt",
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_SS+All_RUS.txt",
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS.txt",
+    "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/BLACK_VLESS_RUS_mobile.txt"
 ]
 
 all_sources = wl_sources + bl_sources
